@@ -32,6 +32,11 @@ const char *get_vm_folder()
     return [_vm_name fileSystemRepresentation];
 }
 
+extern int _argc;
+extern char **_argv;
+extern char **_env;
+extern void *veertu_headless_thread(void *p);
+
 int main (int argc, const char * argv[]) {
 
     @autoreleasepool {
@@ -83,20 +88,31 @@ int main (int argc, const char * argv[]) {
         if (get_addons_settings(get_vm_folder(), &settings) && settings.hdpi)
             use_hdpi = settings.hdpi;
 
-        // Pull this console process up to being a fully-fledged graphical
-        // app with a menubar and Dock icon
-        //ProcessSerialNumber psn = { 0, kCurrentProcess };
-        //TransformProcessType(&psn, kProcessTransformToForegroundApplication);
-
-        [VmApp sharedApplication];
+//        [VmApp sharedApplication];
 
         // Create an Application controller
         VM* vm = [[VMLibrary sharedVMLibrary] readVmProperties:[NSString stringWithUTF8String:get_vm_folder()]];
-        appController = [[VmAppController alloc] initWithVM:vm];
-        [[NSApplication sharedApplication] setDelegate: appController];
+        if (vm.advanced.headless) {
+            _argc = argc;
+            _argv = argv;
+            //_env = *_NSGetEnviron();
+            pthread_t tid;
+            pthread_create(&tid, NULL, veertu_headless_thread, CFBridgingRetain(vm));
 
-        // Start the main event loop
-        [NSApp run];
+            register_power_events();
+
+            CFRunLoopRun();
+        } else {
+            // Pull this console process up to being a fully-fledged graphical
+            // app with a menubar and Dock icon
+            [NSApplication sharedApplication].activationPolicy = NSApplicationActivationPolicyRegular;
+
+            appController = [[VmAppController alloc] initWithVM:vm];
+            [NSApplication sharedApplication].delegate = appController;
+
+            // Start the main event loop
+            [[NSApplication sharedApplication] run];
+        }
     }
     
     return 0;

@@ -580,6 +580,26 @@ bool appStarted = false;
 
 #define PTHREAD_HIGHEST_PRIO    31
 
+void *veertu_headless_thread(void *p)
+{
+    struct sched_param sp;
+
+    VM* vm = CFBridgingRelease(p);
+
+    // set highest priority for main loop thread to mitigate poll() timeouts (OSX bug?)
+    memset(&sp, 0, sizeof(struct sched_param));
+    sp.sched_priority = PTHREAD_HIGHEST_PRIO;
+    if (pthread_setschedparam(pthread_self(), SCHED_RR, &sp)  == -1) {
+        printf("Failed to change priority.\n");
+        return 0;
+    }
+
+    vmx_main([vm.name fileSystemRepresentation], _argc, _argv, _env);
+
+    exit(0);
+    return 0;
+}
+
 void *veertu_main_thread(void *p)
 {
     struct sched_param sp;
