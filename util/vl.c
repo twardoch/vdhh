@@ -2655,6 +2655,8 @@ int veertu_run(int argc, char **argv, char **envp)
                 break;
             case QEMU_OPTION_version:
                     printf("Veertu 1.0, Copyright 2015 Veertu Ltd.\n");
+                    printf("QEMU is Copyright (c) 2003-2016 "
+                           "Fabrice Bellard and the QEMU Project developers\n");
                 exit(0);
                 break;
             case QEMU_OPTION_m:
