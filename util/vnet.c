@@ -574,7 +574,7 @@ static int net_init_proxy(int mode, uuid_t uuid, uint8_t lmac[6]) {
     // launch the proxy
     char vcmd[128];
     snprintf(vcmd, sizeof(vcmd), "vmnetproxy %s %s %s %u",
-             path, mode == VMNET_HOST_MODE ? "host" : "shared",
+             path, VMNET_HOST_MODE == mode ? "host" : "shared",
              buf, getuid());
     if (0 != vsystem(vcmd, 0)) {
         close(fd);
@@ -635,7 +635,7 @@ int net_init_vnet(const NetClientOptions *opts, const char *name, NetClientState
 
     uint8_t lmac[6];
     interface_ref iface = NULL;
-    int proxyfd = net_init_proxy(opts, uuid, lmac);
+    int proxyfd = net_init_proxy(mode, uuid, lmac);
     if (-1 == proxyfd) {
         iface = net_init_vmnet(mode, uuid, lmac);
         if (NULL == iface)
