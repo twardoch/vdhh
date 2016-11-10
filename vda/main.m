@@ -6,7 +6,7 @@
 //  Copyright © 2016 Veertu Labs Ltd. All rights reserved.
 //
 
-#import "VmApp.h"
+#import "window/VmApp.h"
 #import "cocoa_util.h"
 #import <vlaunch/vsystem.h>
 #import <VMManager/vmlibrary_ops.h>
