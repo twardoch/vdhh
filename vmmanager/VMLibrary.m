@@ -1580,7 +1580,7 @@
     self.temp_vm_folder = folder;
 }
 
-- (void) addTemporaryVM: (NSDictionary*) props
+- (NSString*) addTemporaryVM: (NSDictionary*) props
 {
     NSString *name = [props objectForKey: @"name"];
     //NSString *iso = [props objectForKey: @"iso"];
@@ -1599,7 +1599,7 @@
     }
     VM *vm = [self performSelector: vm_create withObject: props];
 
-    NSURL *directoryURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:    [[NSProcessInfo processInfo] globallyUniqueString]] isDirectory:YES];
+    NSURL *directoryURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:[[NSProcessInfo processInfo] globallyUniqueString]] isDirectory:YES];
     [[NSFileManager defaultManager] createDirectoryAtURL:directoryURL withIntermediateDirectories:YES attributes:nil error: nil];
     self.temp_vm_folder = [directoryURL path];
 
@@ -1607,7 +1607,7 @@
     if (![[vm toDictionary] writeToFile: plist_file atomically: YES])
         [NSException raise:@"Cannot create properties file" format:@"file %@", plist_file];
 
-//    self.temp_vm = vm;
+    return self.temp_vm_folder;
 }
 
 - (void) cleanupTempVm
