@@ -590,6 +590,9 @@ static int net_init_proxy(int mode, uuid_t uuid, uint8_t lmac[6]) {
         return -1;
     }
 
+    // go to "anonymous" mode
+    unlink(path);
+
     if (-1 == connect(fd, (struct sockaddr*)&peer, addrlen)) {
         close(fd);
         return -1;
