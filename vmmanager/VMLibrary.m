@@ -892,7 +892,7 @@
         cd_type = @"cdrom";
         if ([cd.type isEqualToString: @"image"])
             cd_type = @"disk";
-        NSString *img = cd.file && 0 == access([cd.file fileSystemRepresentation], R_OK) ? cd.file : nil;
+        NSString *img = [cd.file length] > 0 && 0 == access([cd.file fileSystemRepresentation], R_OK) ? cd.file : nil;
 
         [params addObject: @"-drive"];
         [params addObject: [NSString stringWithFormat: @"if=none,id=cdrom.%d,file=%@,media=%@",
