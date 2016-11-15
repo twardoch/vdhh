@@ -19,7 +19,11 @@ all the system resources.
 
 ## Download
 
-To Install Veertu Desktop on Mac, please visit [veertu.com](https://veertu.com). Follow updates on twitter @veertu_labs and join discussion in our slack channel https://slack.veertu.com/.
+To Install Veertu Desktop on Mac, please visit [veertu.com](https://veertu.com) and follow updates on twitter @veertu_labs.
+
+## Community
+Join us Slack community to discuss and give feedback
+https://slack.veertu.com/
 
 ## Building
 
