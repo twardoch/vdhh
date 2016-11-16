@@ -462,6 +462,7 @@ vmx_irq *i8259_init(ISABus *bus, vmx_irq parent_irq)
     DeviceState *dev;
     ISADevice *isadev;
     PICCommonState *s;
+    vmx_irq *irq_set;
 
     isadev = i8259_init_chip(TYPE_I8259, bus, true);
     dev = DEVICE(isadev);
@@ -474,8 +475,10 @@ vmx_irq *i8259_init(ISABus *bus, vmx_irq parent_irq)
 
     isadev = i8259_init_chip(TYPE_I8259, bus, false);
     dev = DEVICE(isadev);
+    s = PIC_COMMON(dev);
     pic_dev2 = dev;
-
+    
+    s->int_out[0] = vmx_allocate_irq(pic_set_irq, isa_pic, 2);
 
     slave_pic = PIC_COMMON(dev);
 
