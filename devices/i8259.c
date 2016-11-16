@@ -462,7 +462,6 @@ vmx_irq *i8259_init(ISABus *bus, vmx_irq parent_irq)
     DeviceState *dev;
     ISADevice *isadev;
     PICCommonState *s;
-    vmx_irq *irq_set;
 
     isadev = i8259_init_chip(TYPE_I8259, bus, true);
     dev = DEVICE(isadev);
