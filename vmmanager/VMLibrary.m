@@ -144,6 +144,16 @@
                         [NSDictionary dictionaryWithObjectsAndKeys: @"Other 32bit", @"name",
                                         NSStringFromSelector(@selector(defaultVMConfigIDE:)), @"cfg", nil], nil]
            forKey: @"Linux"];
+        
+        [os setObject: [NSArray arrayWithObjects:
+                        [NSDictionary dictionaryWithObjectsAndKeys: @"Freebsd", @"name",
+                         NSStringFromSelector(@selector(defaultVMConfigBsd:)), @"cfg", nil],
+                        [NSDictionary dictionaryWithObjectsAndKeys: @"OpenBSD", @"name",
+                         NSStringFromSelector(@selector(defaultVMConfigBsd:)), @"cfg", nil],
+                        [NSDictionary dictionaryWithObjectsAndKeys: @"NetBSD", @"name",
+                         NSStringFromSelector(@selector(defaultVMConfigBsd:)), @"cfg", nil],
+                         nil]
+               forKey: @"BSD"];
 
         [os setObject: [NSArray arrayWithObjects:
                         [NSDictionary dictionaryWithObjectsAndKeys: @"Other", @"name",
@@ -207,7 +217,7 @@
 
 - (NSArray*) getOSList
 {
-    return [self.os_list allKeys];
+    return @[@"Windows", @"Linux", @"BSD", @"Other"];
 }
 
 - (NSArray*) getOSFamilyList: (NSString*) os
@@ -1567,6 +1577,20 @@
     [new_props setObject: @"2G" forKey: @"ram"];
 
     return [self defaultVMConfig: new_props];
+}
+
+- (VM *) defaultVMConfigBsd: (NSDictionary *) props
+{
+    NSMutableDictionary *new_props = [NSMutableDictionary dictionaryWithDictionary: props];
+    [new_props setObject: @"30G" forKey: @"hdSize"];
+    [new_props setObject: [NSNumber numberWithInt: 2] forKey: @"cpu"];
+    [new_props setObject: @"sata" forKey: @"ideMode"];
+    [new_props setObject: @"2G" forKey: @"ram"];
+    
+    VM* vm = [self defaultVMConfig: new_props];
+    vm.hw.hyperv = @"off";
+    
+    return vm;
 }
 
 - (VM *) defaultVMConfigIDE: (NSDictionary *) props
