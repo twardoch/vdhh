@@ -897,8 +897,14 @@ static const VeertuTypeInfo device_type_info = {
 static void qbus_initfn(VeertuType *obj)
 {
     BusState *bus = BUS(obj);
+    BusClass *bc = BUS_GET_CLASS(bus);
 
     QTAILQ_INIT(&bus->children);
+    
+    if (!bus->realized) {
+        if (bc->realize)
+            bc->realize(bus, NULL);
+    }
 }
 
 static char *default_bus_get_fw_dev_path(DeviceState *dev)
