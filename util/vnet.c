@@ -541,6 +541,10 @@ static int create_socket(const char* path) {
     if (-1 == s)
         return -1;
 
+    int sendbuff = 1024 * 1024;
+    setsockopt(s, SOL_SOCKET, SO_SNDBUF, &sendbuff, sizeof(sendbuff));
+    setsockopt(s, SOL_SOCKET, SO_RCVBUF, &sendbuff, sizeof(sendbuff));
+
     struct sockaddr_un addr = {0};
     addr.sun_family = AF_UNIX;
     strncpy(addr.sun_path, path, sizeof(addr.sun_path));
