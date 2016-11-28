@@ -46,6 +46,8 @@
 
 extern uint32_t vm_ip_address;
 
+extern int _veertu_loglevel;
+
 struct arphdr {
     unsigned short ar_hrd;      /* format of hardware address */
     unsigned short ar_pro;      /* format of protocol address */
@@ -577,9 +579,9 @@ static int net_init_proxy(int mode, uuid_t uuid, uint8_t lmac[6]) {
 
     // launch the proxy
     char vcmd[128];
-    snprintf(vcmd, sizeof(vcmd), "vmnetproxy %s %s %s %u",
+    snprintf(vcmd, sizeof(vcmd), "vmnetproxy %s %s %s %u %u",
              path, VMNET_HOST_MODE == mode ? "host" : "shared",
-             buf, getuid());
+             buf, getuid(), _veertu_loglevel);
     if (0 != vsystem(vcmd, 0)) {
         close(fd);
         unlink(path);

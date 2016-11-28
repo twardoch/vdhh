@@ -37,6 +37,12 @@ extern char **_argv;
 extern char **_env;
 extern void *veertu_headless_thread(void *p);
 
+#ifdef DEBUG
+int _veertu_loglevel = 999;
+#else
+int _veertu_loglevel = 0;
+#endif
+
 int main (int argc, const char * argv[]) {
 
     @autoreleasepool {
@@ -81,6 +87,9 @@ int main (int argc, const char * argv[]) {
                         fd = strtol(argv[i], NULL, 0);
                     }
                     vlaunchfd[1] = fd;
+                } else if (!strcmp(opt, "-loglevel") && i < argc - 1) {
+                    ++i;
+                    _veertu_loglevel = strtol(argv[i], NULL, 0);
                 }
             }
         }
