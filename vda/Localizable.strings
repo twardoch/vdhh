@@ -43,8 +43,6 @@
 "CHOOSE_IMPORT_DESC"="Pick an exisiting VM image directory and file which can be in one of the following formats: OVA, VMDK, PVM, HDS or RAW";
 "CANCEL_CONVERT"="Press Cancel to stop conversion";
 "FAILED_FIND_IMG"="Failed to locate VM disk image";
-"VMLIB_ACCESS_DENIED"="Cannot access VM Library folder";
-"VMLIB_ACCESS_DENIED_INFO"="From Menu/Preferences choose the location of VM Library folder";
 "NEWER_TOOLS_AVAIL"="Newer Guest Add-Ons available";
 "NEWER_TOOLS_INFO"="We have detected an older version of guest add-ons installed on this VM. Please upgrade to a newer version";
 "CANNOT_IMPORT"="Cannot Import";
