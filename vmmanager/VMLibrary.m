@@ -77,23 +77,16 @@
         NSUserDefaults* prefs = [NSUserDefaults standardUserDefaults];
         if ([prefs objectForKey: @"VMLIB_PATH"]) {
             self.vmLibPath = [prefs objectForKey: @"VMLIB_PATH"];
-
-            NSData *bookmark = [prefs objectForKey: self.vmLibPath];
-            if (bookmark) {
-                BOOL isStale;
-                NSError *error;
-                NSURL* outUrl = [NSURL URLByResolvingBookmarkData: bookmark options:NSURLBookmarkResolutionWithSecurityScope
-                        relativeToURL:nil bookmarkDataIsStale: &isStale error:&error];
-                [outUrl stopAccessingSecurityScopedResource];
-                if (![outUrl startAccessingSecurityScopedResource]) {
-                    NSAlert *alert = [[NSAlert alloc] init];
-                    [alert setMessageText: NSLocalizedString(@"VMLIB_ACCESS_DENIED", nil)];
-                    [alert setInformativeText:NSLocalizedString(@"VMLIB_ACCESS_DENIED_INFO", nil)];
-                    [alert addButtonWithTitle:NSLocalizedString(@"Close", nil)];
-                    alert.alertStyle = NSCriticalAlertStyle;
-                    [alert runModal];
-                } else
-                    vmlib_found = TRUE;
+            vmlib_found = 0 == access([self.vmLibPath fileSystemRepresentation], R_OK | W_OK);
+            if (!vmlib_found) {
+                NSAlert *alert = [[NSAlert alloc] init];
+                [alert setMessageText: NSLocalizedString(@"VMLIB_ACCESS_DENIED", nil)];
+                NSString* info = [NSString stringWithFormat:NSLocalizedString(@"VMLIB_ACCESS_DENIED_INFO", nil),
+                                  self.vmLibPath];
+                [alert setInformativeText:info];
+                [alert addButtonWithTitle:NSLocalizedString(@"Close", nil)];
+                alert.alertStyle = NSCriticalAlertStyle;
+                [alert runModal];
             }
         }
         if (!vmlib_found)
