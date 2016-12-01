@@ -336,19 +336,8 @@ static void vnet_cleanup(NetClientState *nc)
     }
 
     if (-1 != s->proxyfd) {
-        // send terminating packet for UDP client
-        uint32_t term = htonl(0x999);
-        write(s->proxyfd, &term, sizeof(term));
-
-        struct sockaddr_un local = {0};
-        socklen_t addrlen = sizeof(local);
-        getsockname(s->proxyfd, (struct sockaddr*)&local, &addrlen);
-
         close(s->proxyfd);
         s->proxyfd = -1;
-
-        if (local.sun_path[0])
-            unlink(local.sun_path);
     }
 }
 
