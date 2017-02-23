@@ -26,7 +26,7 @@
 "DELETE_CONTROLLER_ERR"="The SCSI controller has attached devices. Please detach them first";
 "CANNOT_CHANGE_CONTROLLER"="Cannot change controller";
 "SURE_TO_DELETE"="Are you sure you want to delete this VM?";
-"DELETE_MSG"="If you choose Delete, the Virtual Machine and all its data will be permananelty erased from the disk";
+"DELETE_MSG"="If you choose Delete, the Virtual Machine and all its data will be permanently erased from the disk";
 "DELETE_VM"="Delete This VM";
 "FIRST_VIEW_DESC"="Download and run a VM from our cloud library or create your own VM (Windows 10, Windows 8, custom Linux, etc.)";
 "CHOOSE_ISO_DESC"="Specify VM name and installation media which can be either optical drive on your Mac or an .ISO image file containing the setup";
