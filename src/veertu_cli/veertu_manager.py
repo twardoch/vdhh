@@ -391,10 +391,12 @@ class VeertuManager(object):
         output_file = os.path.join(d, f)
 
 
+        # Centralize invalid handle values
+        INVALID_HANDLES = {None, "", "0", "-"}
         command = 'export vm id "{}" to POSIX file "{}" format "{}"'
         handle = self._call_veertu_with_name_fallback(command, vm_id, output_file, fmt, id_value=vm_id,
                                                       return_formatted=False)
-        if not handle or handle == "0" or handle == "-": # Check for invalid handle
+        if handle in INVALID_HANDLES:  # Check for invalid handle
             return False
         if do_progress_loop:
             self.progress_loop(handle, silent=silent)
