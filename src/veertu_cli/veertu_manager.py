@@ -386,7 +386,7 @@ class VeertuManager(object):
         if '.' not in f: # Ensure filename has an extension
             f += "." + fmt
         # Ensure directory exists
-        if d and not os.path.isdir(d):
+        if d:
             os.makedirs(d, exist_ok=True)
         output_file = os.path.join(d, f)
 
