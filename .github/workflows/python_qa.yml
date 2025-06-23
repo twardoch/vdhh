@@ -1,0 +1,49 @@
+name: Python QA
+
+on:
+  push:
+    branches: [ main, master, develop ] # Adjust branches as needed
+  pull_request:
+    branches: [ main, master, develop ] # Adjust branches as needed
+
+jobs:
+  quality-assurance:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Hatch and uv
+      run: |
+        pip install hatch uv
+
+    - name: Install project dependencies (via Hatch)
+      run: hatch env create default # This will use uv by default if available and configured in Hatch
+
+    - name: Lint with Ruff
+      run: hatch run default:lint
+
+    - name: Type check with MyPy
+      run: hatch run default:typecheck
+
+    - name: Test with Pytest
+      run: hatch run default:test # Will run tests if any are found
+
+    - name: Build package
+      run: hatch run default:build
+
+    - name: Upload distributions (optional, for inspection)
+      uses: actions/upload-artifact@v4
+      with:
+        name: python-package-${{ matrix.python-version }}
+        path: dist/
+        if-no-files-found: ignore # Don't fail if build didn't produce files (e.g. if only C part fails)
