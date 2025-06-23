@@ -418,9 +418,7 @@ class VeertuManager(object):
         result_list = self._call_veertu_app(command, *args_for_command, return_formatted=True) # Expects list
         result = result_list[0] if result_list else None
 
-        if result == 'false' or result is None or result == '-':
-            return None
-        return result
+        return None if result == 'false' or result is None or result == '-' else result
 
 
     def import_vm(self, file_path, name, os_family, os_type, fmt, silent=False, do_progress_loop=True):
