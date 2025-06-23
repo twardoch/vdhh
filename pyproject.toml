@@ -1,0 +1,168 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "veertu-vmm" # Assuming a project name, can be changed
+dynamic = ["version"]
+description = "A virtual machine monitor" # Placeholder description
+readme = "README.md"
+requires-python = ">=3.8"
+license = "Proprietary" # Placeholder, update if needed
+authors = [
+    { name = "Veertu", email = "contact@veertu.com" }, # Placeholder
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    # Add Python dependencies from include/cli/requirements.txt if it exists
+    # or identify them from the code.
+    # For now, I'll add click and tabulate as seen in the file structure
+    "click",
+    "tabulate",
+]
+
+[project.urls]
+Homepage = "https://github.com/veertu/vmm" # Placeholder
+Repository = "https://github.com/veertu/vmm" # Placeholder
+
+[project.scripts]
+# Assuming the CLI entry point is something like this, will verify later
+veertu-cli = "veertu_cli.cli_interface:cli_entry_point"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.targets.sdist]
+include = ["/src"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/veertu_cli"]
+
+[tool.ruff]
+line-length = 88
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # Pyflakes
+    "I",  # isort
+    "C",  #flake8-comprehensions
+    "B",  # flake8-bugbear
+]
+ignore = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-string-normalization = true
+line-ending = "auto"
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true # Start with this and refine
+# strict = true # Consider enabling for new code
+
+# Specify paths for mypy to check
+# files = ["src/veertu_cli", "include/cli"] # Adjust as needed
+
+[[tool.mypy.overrides]]
+module = [
+    "click.*",
+    "tabulate.*"
+]
+ignore_missing_imports = true
+
+[tool.hatch.envs.default]
+dependencies = [
+  "pytest",
+  "pytest-cov",
+  "mypy",
+  "ruff",
+  "uv",
+]
+[tool.hatch.envs.default.scripts]
+build = "hatch build"
+publish = "hatch build && twine upload dist/*" # Requires twine
+test = "pytest {args:tests}"
+test-cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src --cov=tests {args}"
+lint = "ruff check . && ruff format --check ."
+format = "ruff format . && ruff check --fix ."
+typecheck = "mypy ." # Or specify paths like: mypy src/veertu_cli include/cli
+
+
+# Placeholder for C/Obj-C build if it can be triggered via Hatch
+# [tool.hatch.envs.build_native]
+# scripts = [
+#   "configure = \"./configure\"",
+#   "build = \"make\"",
+# ]
+
+[tool.hatch.envs.docs]
+dependencies = [
+  "sphinx",
+  "sphinx-rtd-theme",
+]
+[tool.hatch.envs.docs.scripts]
+build = "sphinx-build docs docs/_build"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = [
+    "tests", # Assuming tests will be in a top-level 'tests' directory
+]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+
+# Coverage configuration for pytest-cov
+[tool.coverage.run]
+source = ["src/veertu_cli"] # Adjust to your Python source directory
+branch = true
+# omit = [ ] # Files to omit from coverage
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 70 # Example, adjust as needed
+
+[tool.coverage.html]
+directory = "coverage_html_report"
+
+# Ruff specific settings for Hatch
+[tool.hatch.commands.fmt]
+description = "Format code with ruff"
+command = "hatch run default:format"
+
+[tool.hatch.commands.lint]
+description = "Lint code with ruff"
+command = "hatch run default:lint"
+
+[tool.hatch.commands.typecheck]
+description = "Typecheck code with mypy"
+command = "hatch run default:typecheck"
+
+[tool.hatch.commands.test]
+description = "Run tests with pytest"
+command = "hatch run default:test"
+
+[tool.hatch.commands.cov]
+description = "Run tests with pytest and generate coverage report"
+command = "hatch run default:test-cov"
+
+[tool.hatch.commands.all-checks]
+description = "Run all checks (lint, typecheck, test)"
+command = """
+hatch run default:lint && \\
+hatch run default:typecheck && \\
+hatch run default:test
+"""

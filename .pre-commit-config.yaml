@@ -1,0 +1,48 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+# default_language_version:
+#    python: python3.11 # Or your project's minimum supported version
+
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+    -   id: check-yaml
+    -   id: check-toml
+    -   id: end-of-file-fixer
+    -   id: trailing-whitespace
+    # -   id: check-added-large-files # Consider adding if large files are an issue
+
+-   repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.4 # Use a specific ruff version
+    hooks:
+    # Run the formatter
+    -   id: ruff-format
+        args: [--line-length=88]
+    # Run the linter
+    -   id: ruff
+        args: [--fix, --exit-non-zero-on-fix, --line-length=88]
+
+-   repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.10.0 # Use a specific mypy version
+    hooks:
+    -   id: mypy
+        # args: [--config-file=pyproject.toml] # Mypy should pick up pyproject.toml by default
+        # You might need to add --ignore-missing-imports or other flags if not set in pyproject.toml
+        # Or specify files/folders if needed: files: ^src/
+        additional_dependencies: [
+            # Add any type stubs or dependencies mypy needs that are not project dependencies
+            # e.g., "click", "tabulate" if not already covered by project deps for mypy
+            # However, hatch environment should ideally provide these.
+            # If running mypy standalone via pre-commit, it might need them explicitly.
+            # For now, assuming pyproject.toml [tool.mypy] settings are sufficient.
+            # If Hatch environment is used by pre-commit (less common), this might not be needed.
+            # As pre-commit usually creates its own envs.
+             "click", "tabulate" # Add direct deps for mypy if it runs in isolated env
+        ]
+        # verbose: true # For debugging
+        # pass_filenames: false # If mypy should run on all configured files, not just staged
+
+# Instructions for users:
+# 1. Install pre-commit: pip install pre-commit
+# 2. Set up the git hook scripts: pre-commit install
