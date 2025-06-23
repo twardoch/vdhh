@@ -501,7 +501,7 @@ class VeertuManager(object):
         vm_info = self._get_section(vm_id, keys) # No specific section for these top-level items
 
         if not vm_info.get('id'): # If basic info failed or vm_id is invalid
-            raise VMNotFoundException("Could not retrieve basic info for VM ID: {}".format(vm_id))
+            raise VMNotFoundException(f"Could not retrieve basic info for VM ID: {vm_id}")
 
         if advanced_settings:
             vm_info['advanced_settings'] = self.get_advanced_settings(vm_info.get('id'))
